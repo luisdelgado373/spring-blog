@@ -1,43 +1,55 @@
 package com.codeup.blog.blog.controllers;
 
 
+import com.codeup.blog.blog.Ad;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Controller
 public class PostController {
 
-    @RequestMapping(path = "/posts", method = RequestMethod.GET)
-    @ResponseBody
-    public String postsPage(){
-        return "<h2>This is the posts index page</h2>";
+    ArrayList<Ad> adsList;
+
+    public PostController() {
+        adsList = new ArrayList<Ad>();
+
+        adsList.add(new Ad(1, "First Ad", "First Description"));
+        adsList.add(new Ad(2, "Second Ad", "Second Description"));
+        adsList.add(new Ad(3, "Third Ad", "Third Description"));
     }
 
-    @RequestMapping(path = "/posts/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public String getPost(@PathVariable int id){
-        return "<h2>View an individual post with the id of " + id + "</h2>";
+    @GetMapping(path = "/ads")
+    public String index(Model viewModel) {
+        viewModel.addAttribute("ads", adsList);
+
+        return "/ads/index";
     }
 
-    @RequestMapping(path = "/posts/create", method = RequestMethod.GET)
-    @ResponseBody
-    public String showCreate(){
-        return "<h2>View the form for creating a post</h2>";
+    @GetMapping("/ads/{id}")
+    public String show(@PathVariable long id, Model viewModel) {
+        viewModel.addAttribute("ad", adsList.get((int) id - 1));
+        return "ads/show";
     }
 
-    @PostMapping(path = "/posts/create")
+    @GetMapping("/ads/create")
     @ResponseBody
-    public String createPost(){
-        return "<h2>create a new post</h2>";
+    public String showCreateForm() {
+        return "<h2>View the form for creating an ad</h2>";
     }
 
-    HashMap<String, Boolean> items = new HashMap<>();
-
-
+    @PostMapping("/ads/create")
+    @ResponseBody
+    public String create(@RequestParam String title, @RequestParam String body) {
+        System.out.println("title: " + title);
+        System.out.println("body: " + body);
+        return "Create a new ad";
+    }
 
 }
