@@ -1,55 +1,82 @@
 package com.codeup.blog.blog.controllers;
 
-
-import com.codeup.blog.blog.Ad;
+import com.codeup.blog.blog.Post;
+import com.codeup.blog.blog.repositories.PostRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class PostController {
 
-    ArrayList<Ad> adsList;
+    private PostRepository postDao;
 
-    public PostController() {
-        adsList = new ArrayList<Ad>();
-
-        adsList.add(new Ad(1, "First Ad", "First Description"));
-        adsList.add(new Ad(2, "Second Ad", "Second Description"));
-        adsList.add(new Ad(3, "Third Ad", "Third Description"));
+    public PostController(PostRepository postDao) {
+        this.postDao = postDao;
     }
 
-    @GetMapping(path = "/ads")
+    @GetMapping(path = "/posts")
     public String index(Model viewModel) {
-        viewModel.addAttribute("ads", adsList);
-
-        return "/ads/index";
+        viewModel.addAttribute("posts", postDao.findAll());
+        return "posts/index";
     }
 
-    @GetMapping("/ads/{id}")
+    @GetMapping("/posts/{id}")
     public String show(@PathVariable long id, Model viewModel) {
-        viewModel.addAttribute("ad", adsList.get((int) id - 1));
-        return "ads/show";
+        viewModel.addAttribute("post", postDao.getOne(id));
+        return "posts/show";
     }
 
-    @GetMapping("/ads/create")
-    @ResponseBody
+    @GetMapping("/posts/create")
     public String showCreateForm() {
-        return "<h2>View the form for creating an ad</h2>";
+        return "posts/create";
     }
 
-    @PostMapping("/ads/create")
-    @ResponseBody
+    @PostMapping("/posts/create")
     public String create(@RequestParam String title, @RequestParam String body) {
-        System.out.println("title: " + title);
-        System.out.println("body: " + body);
-        return "Create a new ad";
+        Post post = postDao.save(new Post(title, body));
+        return "redirect:/posts/" + post.getId();
     }
+
+//    @GetMapping("/posts/search")
+//    @ResponseBody
+//    public Post search(@PathVariable String title) {
+//        return postDao.findByTitle(title);
+//    }
+
+    @GetMapping("/posts/{id}/edit")
+    public String edit(@PathVariable long id, Model viewModel) {
+        viewModel.addAttribute("post", postDao.getOne(id));
+        return "posts/edit";
+    }
+
+    @PostMapping("/ads/{id}/edit")
+    public String update(@PathVariable long id, @RequestParam String title, @RequestParam String description) {
+        Post oldPost = postDao.getOne(id);
+        oldPost.setTitle(title);
+        oldPost.setDescription(description);
+        postDao.save(oldPost);
+        return "redirect:/posts/" + id;
+    }
+
+    @PostMapping("/ads/{id}/delete")
+    public String delete(@PathVariable long id) {
+        postDao.deleteById(id);
+        return "redirect:/posts";
+    }
+
+//    @ResponseBody
+//    @GetMapping("/ads/length")
+//    public List<String> returnAdsByLength() {
+//        return postDao.getPostsOfCertainTitleLength();
+//    }
+//
+//    @ResponseBody
+//    @GetMapping("/ads/length/native")
+//    public List<String> returnAdsByLengthNative() {
+//        return postDao.getPostsOfCertainTitleLengthNative();
+//    }
 
 }

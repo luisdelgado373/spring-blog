@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Ad</title>
+    <th:block th:replace="fragments/header :: main-header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: main-navbar"></div>
+
+<div>
+    <form th:action="'/posts" th:method="post">
+        <label for="title">Title</label>
+        <input id="title" type="text" name="title" placeholder="Enter ad title">
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Enter ad description"></textarea>
+        <button>Update</button>
+    </form>
+</div>
+<th:block th:replace="fragments/footer :: main-footer"/>
+</body>
+</html>
