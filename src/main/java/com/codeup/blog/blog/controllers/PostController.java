@@ -52,7 +52,7 @@ public class PostController {
         return "posts/edit";
     }
 
-    @PostMapping("/ads/{id}/edit")
+    @PostMapping("/posts/{id}/edit")
     public String update(@PathVariable long id, @RequestParam String title, @RequestParam String description) {
         Post oldPost = postDao.getOne(id);
         oldPost.setTitle(title);
@@ -61,7 +61,7 @@ public class PostController {
         return "redirect:/posts/" + id;
     }
 
-    @PostMapping("/ads/{id}/delete")
+    @PostMapping("/posts/{id}/delete")
     public String delete(@PathVariable long id) {
         postDao.deleteById(id);
         return "redirect:/posts";

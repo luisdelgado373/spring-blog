@@ -11,7 +11,7 @@
 
 <h1>Edit Post</h1>
 <div>
-    <form th:action="'/posts/' + ${post.id} + '/edit'" th:method="post">
+    <form th:action="'/posts/' + ${post.id} + '/edit'" th:method="'post'">
         <div>
             <label for="title">Title</label>
             <input id="title" type="text" th:value="${post.title}" name="title">
