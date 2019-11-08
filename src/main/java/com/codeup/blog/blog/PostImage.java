@@ -1,4 +1,4 @@
-package com.codeup.blog.blog.controllers;
+package com.codeup.blog.blog;
 
 import com.codeup.blog.blog.Post;
 

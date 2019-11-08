@@ -1,8 +1,5 @@
 package com.codeup.blog.blog;
 
-import com.codeup.blog.blog.controllers.PostDetails;
-import com.codeup.blog.blog.controllers.PostImage;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -26,6 +23,9 @@ public class Post {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<PostImage> images;
+
+    @ManyToMany(mappedBy = "posts")
+    private List<Tag> tags;
 
     public Post() {
     }

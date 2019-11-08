@@ -1,20 +1,37 @@
 package com.codeup.blog.blog.controllers;
 
 import com.codeup.blog.blog.Post;
+import com.codeup.blog.blog.Tag;
 import com.codeup.blog.blog.repositories.PostRepository;
+import com.codeup.blog.blog.repositories.TagRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Controller
 public class PostController {
 
     private PostRepository postDao;
+    private TagRepository tagDao;
 
-    public PostController(PostRepository postDao) {
+    public PostController(PostRepository postDao, TagRepository tagDao) {
         this.postDao = postDao;
+        this.tagDao = tagDao;
+    }
+
+    @GetMapping("/posts-tags/{id}")
+    public String showPostTag(@PathVariable long id, Model vModel) {
+        vModel.addAttribute("post", postDao.getOne(id));
+        return "posts/tags";
+    }
+
+    @PostMapping("/tags/posts/{id}")
+    public String assignNewTagToPost(@PathVariable int id, @RequestParam String name) {
+        Post post = postDao.getOne((long) id);
+        tagDao.save(new Tag(name, Arrays.asList(post)));
+        return "redirect:/post-tags" + id;
     }
 
     @GetMapping(path = "/posts")
@@ -35,7 +52,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}/history")
-    public String postHistory(@PathVariable long id,Model viewModel) {
+    public String postHistory(@PathVariable long id, Model viewModel) {
         Post post = postDao.getOne(id);
         viewModel.addAttribute("post", post);
         return "posts/postHistory";
