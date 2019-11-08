@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post History</title>
+</head>
+<body>
+<h1><span th:text="${post.getTitle()}"></span></h1>
+<h3><span th:text="${post.postDetails.getHistoryOfPost()}"></span></h3>
+</body>
+</html>

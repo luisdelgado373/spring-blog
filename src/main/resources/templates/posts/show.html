@@ -9,10 +9,11 @@
 <body>
 <div th:replace="fragments/navbar :: main-navbar"></div>
 
-<h1>Featured Ads</h1>
-
 <div class="card">
     <h1 th:text="${post.title}"></h1>
+    <ul th:each="postImage : ${post.images}">
+        <img th:src="${postImage.url}"/>
+    </ul>
     <p th:text="${post.description}"></p>
     <input type="hidden" name="id" th:value="${post.id}">
     <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit Post</a>

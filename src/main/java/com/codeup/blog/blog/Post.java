@@ -1,6 +1,10 @@
 package com.codeup.blog.blog;
 
+import com.codeup.blog.blog.controllers.PostDetails;
+import com.codeup.blog.blog.controllers.PostImage;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -11,24 +15,26 @@ public class Post {
     @Column(columnDefinition = "int(11) UNSIGNED")
     private long id;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    public Post(){
+    @OneToOne
+    private PostDetails postDetails;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private List<PostImage> images;
+
+    public Post() {
     }
 
-    public Post(String title, String description) {
+    public Post(String title, String description, PostDetails postDetails, List<PostImage> images) {
         this.title = title;
         this.description = description;
-    }
-
-    public Post(long id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
+        this.postDetails = postDetails;
+        this.images = images;
     }
 
     public long getId() {
@@ -53,5 +59,21 @@ public class Post {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public PostDetails getPostDetails() {
+        return postDetails;
+    }
+
+    public void setPostDetails(PostDetails postDetails) {
+        this.postDetails = postDetails;
+    }
+
+    public List<PostImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<PostImage> images) {
+        this.images = images;
     }
 }
