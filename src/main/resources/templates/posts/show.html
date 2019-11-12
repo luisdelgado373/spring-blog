@@ -9,19 +9,37 @@
 <body>
 <div th:replace="fragments/navbar :: main-navbar"></div>
 
-<div class="card">
-    <h1 th:text="${post.title}"></h1>
-    <ul th:each="postImage : ${post.images}">
-        <img th:src="${postImage.url}"/>
-    </ul>
-    <p th:text="${post.description}"></p>
-    <p>Created by: <span th:text="${post.user.email}">></span></p>
-    <input type="hidden" name="id" th:value="${post.id}">
-    <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit Post</a>
-    <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">
-        <button>Delete Post</button>
-    </form>
+<div class="container">
+        <div class="card mb-3">
+<!--            <img src="..." class="card-img-top" alt="...">-->
+<!--            <div class="card-img-top" th:each="postImage : ${post.images}">-->
+                <img class="card-img-top" th:each="postImage : ${post.images}" th:src="${postImage.url}"/>
+<!--            </div>-->
+            <div class="card-body">
+                <h5 class="card-title" th:text="${post.title}"></h5>
+                <p class="card-text" th:text="${post.description}"></p>
+                <p class="card-text"><small>Created by: <span th:text="${post.user.email}"></span></small></p>
+                <a class="btn btn-warning" th:href="@{'/posts/' + ${post.id} + '/edit'}" role="button">Edit Post</a>
+                <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">
+                    <button class="btn btn-danger">Delete Post</button>
+                </form>
+<!--                <p class="card-text"><small class="text-muted"></small></p>-->
+
+<!--        <ul th:each="postImage : ${post.images}">-->
+<!--            <img th:src="${postImage.url}"/>-->
+<!--        </ul>-->
+<!--        <h1 th:text="${post.title}"></h1>-->
+<!--        <p th:text="${post.description}"></p>-->
+<!--        <p>Created by: <span th:text="${post.user.email}"></span></p>-->
+<!--        <input type="hidden" name="id" th:value="${post.id}">-->
+<!--        <a class="btn btn-warning" th:href="@{'/posts/' + ${post.id} + '/edit'}" role="button">Edit Post</a>-->
+<!--        <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">-->
+<!--            <button class="btn btn-danger">Delete Post</button>-->
+<!--        </form>-->
+    </div>
 </div>
+</div>
+
 <th:block th:replace="fragments/footer :: main-footer"/>
 </body>
 </html>

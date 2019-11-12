@@ -57,16 +57,16 @@ public class PostController {
     }
 
     @GetMapping("/posts/create")
-    public String showCreateForm() {
+    public String showCreateForm(Model vModel) {
+        vModel.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    public String create(@RequestParam String title, @RequestParam String description) {
-        Post postToInsert = new Post(title, description);
-        postToInsert.setUser(userDao.getOne(1L));
-        Post post = postDao.save(postToInsert);
-        return "redirect:/posts/" + post.getId();
+    public String create(@ModelAttribute Post postToBeCreated) {
+        postToBeCreated.setUser(userDao.getOne(1L));
+        Post savedPost = postDao.save(postToBeCreated);
+        return "redirect:/posts/" + savedPost.getId();
     }
 
     @GetMapping("/posts/{id}/edit")
@@ -91,14 +91,14 @@ public class PostController {
     }
 
 //    @ResponseBody
-//    @GetMapping("/ads/length")
-//    public List<String> returnAdsByLength() {
+//    @GetMapping("/posts/length")
+//    public List<String> returnPostsByLength() {
 //        return postDao.getPostsOfCertainTitleLength();
 //    }
 //
 //    @ResponseBody
-//    @GetMapping("/ads/length/native")
-//    public List<String> returnAdsByLengthNative() {
+//    @GetMapping("/posts/length/native")
+//    public List<String> returnPostsByLengthNative() {
 //        return postDao.getPostsOfCertainTitleLengthNative();
 //    }
 
