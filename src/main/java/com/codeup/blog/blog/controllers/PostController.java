@@ -3,6 +3,7 @@ package com.codeup.blog.blog.controllers;
 import com.codeup.blog.blog.Post;
 import com.codeup.blog.blog.Tag;
 import com.codeup.blog.blog.repositories.PostRepository;
+import com.codeup.blog.blog.repositories.UserRepository;
 import com.codeup.blog.blog.repositories.TagRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,12 @@ public class PostController {
 
     private PostRepository postDao;
     private TagRepository tagDao;
+    private UserRepository userDao;
 
-    public PostController(PostRepository postDao, TagRepository tagDao) {
+    public PostController(PostRepository postDao, TagRepository tagDao, UserRepository userDao) {
         this.postDao = postDao;
         this.tagDao = tagDao;
+        this.userDao = userDao;
     }
 
     @GetMapping("/post-tags/{id}")
@@ -46,11 +49,6 @@ public class PostController {
         return "posts/show";
     }
 
-    @GetMapping("/posts/create")
-    public String showCreateForm() {
-        return "posts/create";
-    }
-
     @GetMapping("/posts/{id}/history")
     public String postHistory(@PathVariable long id, Model viewModel) {
         Post post = postDao.getOne(id);
@@ -58,11 +56,17 @@ public class PostController {
         return "posts/postHistory";
     }
 
+    @GetMapping("/posts/create")
+    public String showCreateForm() {
+        return "posts/create";
+    }
+
     @PostMapping("/posts/create")
-    public String create(@RequestParam String title, @RequestParam String body) {
-        System.out.println("title: " + title);
-        System.out.println("body: " + body);
-        return "create a new ad";
+    public String create(@RequestParam String title, @RequestParam String description) {
+        Post postToInsert = new Post(title, description);
+        postToInsert.setUser(userDao.getOne(1L));
+        Post post = postDao.save(postToInsert);
+        return "redirect:/posts/" + post.getId();
     }
 
     @GetMapping("/posts/{id}/edit")

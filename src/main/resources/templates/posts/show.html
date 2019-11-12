@@ -15,6 +15,7 @@
         <img th:src="${postImage.url}"/>
     </ul>
     <p th:text="${post.description}"></p>
+    <p>Created by: <span th:text="${post.user.email}">></span></p>
     <input type="hidden" name="id" th:value="${post.id}">
     <a th:href="@{'/posts/' + ${post.id} + '/edit'}">Edit Post</a>
     <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">
