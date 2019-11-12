@@ -5,14 +5,14 @@
     <title>Showing Tags</title>
 </head>
 <body>
-<h1>List of Posts</h1>
+<h1>List of Tags</h1>
 
-<div th:each="post : ${posts}">
-    <h3><span th:text="${post.title}"></span>'s Tags</h3>
+<div th:each="post : ${post}">
+    <h3>Tags for: <span th:text="${post.title}"></span></h3>
     <ul th:each="tag : ${post.tags}">
         <li th:text="${tag.name}"></li>
     </ul>
-    <form th:action="@{'/tags/post/' + ${post.id}}" th:method="post">
+    <form th:action="@{'/tags/posts/' + ${post.id}}" th:method="post">
         <input type="text" name="name" placeholder="Enter tag name">
         <button>Add Tag</button>
     </form>

@@ -21,7 +21,7 @@ public class PostController {
         this.tagDao = tagDao;
     }
 
-    @GetMapping("/posts-tags/{id}")
+    @GetMapping("/post-tags/{id}")
     public String showPostTag(@PathVariable long id, Model vModel) {
         vModel.addAttribute("post", postDao.getOne(id));
         return "posts/tags";
@@ -31,7 +31,7 @@ public class PostController {
     public String assignNewTagToPost(@PathVariable int id, @RequestParam String name) {
         Post post = postDao.getOne((long) id);
         tagDao.save(new Tag(name, Arrays.asList(post)));
-        return "redirect:/post-tags" + id;
+        return "redirect:/post-tags/" + id;
     }
 
     @GetMapping(path = "/posts")
