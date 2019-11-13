@@ -1,7 +1,6 @@
-package com.codeup.blog.blog;
+package com.codeup.blog.blog.models;
 
-import com.codeup.blog.blog.Post;
-import org.w3c.dom.Text;
+import com.codeup.blog.blog.models.Post;
 
 import javax.persistence.*;
 

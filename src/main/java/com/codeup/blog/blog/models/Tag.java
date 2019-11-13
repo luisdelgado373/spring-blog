@@ -1,4 +1,6 @@
-package com.codeup.blog.blog;
+package com.codeup.blog.blog.models;
+
+import com.codeup.blog.blog.models.Post;
 
 import javax.persistence.*;
 import java.util.List;

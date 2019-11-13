@@ -9,18 +9,22 @@
 <div th:replace="fragments/navbar :: main-navbar"></div>
 
 <body>
-
+<header>
 <h1>Featured Posts</h1>
-
-<div class="card mb-3 d-flex justify-content-center" th:each="post : ${posts}">
-    <img th:each="postImage : ${post.images}" class="card-img-top" th:src="${postImage.url}"/>
-    <div class="card-body">
-        <h4 class="card-title" th:text="${post.title}"></h4>
-        <p class="card-text" th:text="${post.description}"></p>
-        <a th:href="@{'posts/' + ${post.id}}" class="btn btn-primary">View Post</a>
+</header>
+<div class="d-flex justify-content-center flex-wrap">
+<div class="col-3" th:each="post : ${posts}">
+    <div class="card mb-4 border-0" style="height: 500px; width: 300px">
+        <img class="card-img-top" style="height: 250px" th:each="postImage : ${post.images}" th:src="${postImage.url}"/>
+        <div class="card-body">
+            <h4 class="card-title text-center" th:text="${post.title}"></h4>
+            <p>• <span class="card-text" th:text="${post.description}"></span></p>
+            <a th:href="@{'posts/' + ${post.id}}" class="btn btn-primary">View Post</a>
+        </div>
     </div>
 </div>
+</div>
 
-    <th:block th:replace="fragments/footer :: main-footer"/>
+<th:block th:replace="fragments/footer :: main-footer"/>
 </body>
 </html>

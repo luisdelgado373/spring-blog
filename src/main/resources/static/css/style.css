@@ -1,3 +1,9 @@
 body {
     background-color: rgb(53,53,55);
 }
+
+header {
+    color: floralwhite;
+    display: flex;
+    justify-content: center;
+}

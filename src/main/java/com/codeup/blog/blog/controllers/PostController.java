@@ -1,10 +1,14 @@
 package com.codeup.blog.blog.controllers;
 
-import com.codeup.blog.blog.Post;
-import com.codeup.blog.blog.Tag;
+import com.codeup.blog.blog.models.User;
+import com.codeup.blog.blog.services.EmailService;
+import com.codeup.blog.blog.models.Post;
+import com.codeup.blog.blog.models.Tag;
 import com.codeup.blog.blog.repositories.PostRepository;
 import com.codeup.blog.blog.repositories.UserRepository;
 import com.codeup.blog.blog.repositories.TagRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +18,18 @@ import java.util.Arrays;
 @Controller
 public class PostController {
 
-    private PostRepository postDao;
-    private TagRepository tagDao;
-    private UserRepository userDao;
+    private final PostRepository postDao;
+    private final TagRepository tagDao;
+    private final UserRepository userDao;
 
-    public PostController(PostRepository postDao, TagRepository tagDao, UserRepository userDao) {
+    @Autowired
+    private final EmailService emailService;
+
+    public PostController(PostRepository postDao, TagRepository tagDao, UserRepository userDao, EmailService emailService) {
         this.postDao = postDao;
         this.tagDao = tagDao;
         this.userDao = userDao;
+        this.emailService = emailService;
     }
 
     @GetMapping("/post-tags/{id}")
@@ -64,8 +72,10 @@ public class PostController {
 
     @PostMapping("/posts/create")
     public String create(@ModelAttribute Post postToBeCreated) {
-        postToBeCreated.setUser(userDao.getOne(1L));
+        User current = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        postToBeCreated.setUser(current);
         Post savedPost = postDao.save(postToBeCreated);
+        emailService.prepareAndSend(savedPost, "Created Post", "A Post has been created with the id of " + savedPost.getId());
         return "redirect:/posts/" + savedPost.getId();
     }
 
