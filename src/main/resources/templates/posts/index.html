@@ -12,14 +12,21 @@
 <header>
 <h1>Featured Posts</h1>
 </header>
-<div class="d-flex justify-content-center flex-wrap">
+<div class="d-flex justify-content-center flex-wrap mx-5">
 <div class="col-3" th:each="post : ${posts}">
-    <div class="card mb-4 border-0" style="height: 500px; width: 300px">
-        <img class="card-img-top" style="height: 250px" th:each="postImage : ${post.images}" th:src="${postImage.url}"/>
+    <div class="card mb-4 border-0" style="height: 400px; width: 300px">
+        <img class="card-img-top" style="height: 200px" th:each="postImage : ${post.images}" th:src="${postImage.url}"/>
         <div class="card-body">
-            <h4 class="card-title text-center" th:text="${post.title}"></h4>
-            <p>• <span class="card-text" th:text="${post.description}"></span></p>
+            <h4 class="card-title font-italic" th:text="${post.title}"></h4>
+            <div th:if="${post.description.length() > 30}">
+            <p>• <span class="card-text font-weight-light" th:text="${post.description.substring(0,30)}"></span>...</p>
+            </div>
+            <div th:if="${post.description.length() < 30}">
+                <p>• <span class="card-text font-weight-light" th:text="${post.description}"></span></p>
+            </div>
+            <div class="container post-view">
             <a th:href="@{'posts/' + ${post.id}}" class="btn btn-primary">View Post</a>
+            </div>
         </div>
     </div>
 </div>

@@ -8,21 +8,29 @@
 <body>
 
 <div th:replace="fragments/navbar :: main-navbar"></div>
-<h1>Sign Up</h1>
+<header>
+    <h1>Sign Up</h1>
+</header>
 
 <div class="container mt-3">
     <form th:action="@{/sign-up}" method="Post" th:object="${user}">
         <div class="form-group">
-            <input th:field="*{username}" class="form-control" placeholder="Enter username">
+            <label for="username">Username</label>
+            <input th:field="*{username}" id="username" class="form-control" placeholder="Enter username">
         </div>
         <div class="form-group">
-            <input th:field="*{email}" class="form-control" placeholder="Enter email">
+            <label for="email">Email</label>
+            <input th:field="*{email}" id="email" class="form-control" placeholder="Enter email">
         </div>
         <div class="form-group">
-            <input th:field="*{password}" type="password" class="form-control" placeholder="Enter password"/>
+            <label for="password">Password</label>
+            <input th:field="*{password}" id="password" type="password" class="form-control"
+                   placeholder="Enter password"/>
         </div>
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary" value="Sign Up">Submit</button>
+        <button class="btn btn-primary" value="Sign Up">Sign me up!</button>
+        <div class="form-group mt-5">
+            <p style="color: floralwhite">Already registered? <a class="font-italic" th:href="@{'login'}">Log In</a> to
+                your profile.</p>
         </div>
     </form>
 </div>
