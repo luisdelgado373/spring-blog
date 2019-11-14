@@ -1,20 +1,48 @@
 package com.codeup.blog.blog.controllers;
 
-import com.codeup.blog.blog.Post;
+import com.codeup.blog.blog.models.User;
+import com.codeup.blog.blog.services.EmailService;
+import com.codeup.blog.blog.models.Post;
+import com.codeup.blog.blog.models.Tag;
 import com.codeup.blog.blog.repositories.PostRepository;
+import com.codeup.blog.blog.repositories.UserRepository;
+import com.codeup.blog.blog.repositories.TagRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Controller
 public class PostController {
 
-    private PostRepository postDao;
+    private final PostRepository postDao;
+    private final TagRepository tagDao;
+    private final UserRepository userDao;
 
-    public PostController(PostRepository postDao) {
+    @Autowired
+    private final EmailService emailService;
+
+    public PostController(PostRepository postDao, TagRepository tagDao, UserRepository userDao, EmailService emailService) {
         this.postDao = postDao;
+        this.tagDao = tagDao;
+        this.userDao = userDao;
+        this.emailService = emailService;
+    }
+
+    @GetMapping("/post-tags/{id}")
+    public String showPostTag(@PathVariable long id, Model vModel) {
+        vModel.addAttribute("post", postDao.getOne(id));
+        return "posts/tags";
+    }
+
+    @PostMapping("/tags/posts/{id}")
+    public String assignNewTagToPost(@PathVariable int id, @RequestParam String name) {
+        Post post = postDao.getOne((long) id);
+        tagDao.save(new Tag(name, Arrays.asList(post)));
+        return "redirect:/post-tags/" + id;
     }
 
     @GetMapping(path = "/posts")
@@ -29,22 +57,27 @@ public class PostController {
         return "posts/show";
     }
 
+    @GetMapping("/posts/{id}/history")
+    public String postHistory(@PathVariable long id, Model viewModel) {
+        Post post = postDao.getOne(id);
+        viewModel.addAttribute("post", post);
+        return "posts/postHistory";
+    }
+
     @GetMapping("/posts/create")
-    public String showCreateForm() {
+    public String showCreateForm(Model vModel) {
+        vModel.addAttribute("post", new Post());
         return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    public String create(@RequestParam String title, @RequestParam String body) {
-        Post post = postDao.save(new Post(title, body));
-        return "redirect:/posts/" + post.getId();
+    public String create(@ModelAttribute Post postToBeCreated) {
+        User current = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        postToBeCreated.setUser(current);
+        Post savedPost = postDao.save(postToBeCreated);
+        emailService.prepareAndSend(savedPost, "Created Post", "A Post has been created with the id of " + savedPost.getId());
+        return "redirect:/posts/" + savedPost.getId();
     }
-
-//    @GetMapping("/posts/search")
-//    @ResponseBody
-//    public Post search(@PathVariable String title) {
-//        return postDao.findByTitle(title);
-//    }
 
     @GetMapping("/posts/{id}/edit")
     public String edit(@PathVariable long id, Model viewModel) {
@@ -68,15 +101,20 @@ public class PostController {
     }
 
 //    @ResponseBody
-//    @GetMapping("/ads/length")
-//    public List<String> returnAdsByLength() {
+//    @GetMapping("/posts/length")
+//    public List<String> returnPostsByLength() {
 //        return postDao.getPostsOfCertainTitleLength();
 //    }
 //
 //    @ResponseBody
-//    @GetMapping("/ads/length/native")
-//    public List<String> returnAdsByLengthNative() {
+//    @GetMapping("/posts/length/native")
+//    public List<String> returnPostsByLengthNative() {
 //        return postDao.getPostsOfCertainTitleLengthNative();
 //    }
 
+    //    @GetMapping("/posts/search")
+//    @ResponseBody
+//    public Post search(@PathVariable String title) {
+//        return postDao.findByTitle(title);
+//    }
 }

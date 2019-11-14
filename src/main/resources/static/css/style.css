@@ -1,0 +1,21 @@
+body {
+    background-color: rgb(53, 53, 55);
+}
+
+header {
+    color: floralwhite;
+    display: flex;
+    justify-content: center;
+    margin: 2em;
+}
+
+label {
+    color: floralwhite;
+}
+
+.post-view {
+    position: absolute;
+    bottom: 10px;
+    padding: 0;
+
+}
