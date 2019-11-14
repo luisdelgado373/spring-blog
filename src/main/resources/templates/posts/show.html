@@ -8,7 +8,7 @@
 <body>
 <div th:replace="fragments/navbar :: main-navbar"></div>
 <header>
-    <h1 th:text="${post.title}"></h1>
+    <h1 class="font-italic" th:text="${post.title}"></h1>
 </header>
 
 <div class="container">
@@ -21,9 +21,9 @@
 
             <div sec:authorize="isAuthenticated()">
                 <th:block th:if="${post.user.id == #authentication.principal.id}">
-                    <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-warning">Edit Post</a>
+                    <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-warning" style="width:100px">Edit Post</a>
                     <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post">
-                        <button class="btn btn-danger btn-block">Delete Post</button>
+                        <button class="btn btn-danger" style="width:100px">Delete Post</button>
                     </form>
                 </th:block>
             </div>
